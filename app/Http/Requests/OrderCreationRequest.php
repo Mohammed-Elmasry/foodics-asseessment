@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Fluent;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class OrderCreationRequest extends FormRequest
 {
@@ -19,5 +21,10 @@ class OrderCreationRequest extends FormRequest
             "products.*.product_id" => ["required", "integer"],
             "products.*.quantity" => ["required", "integer"]
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpException(Response::HTTP_UNPROCESSABLE_ENTITY, "Invalid Request Content");
     }
 }

@@ -9,7 +9,7 @@ use Tests\TestCase;
 class IncomingOrderJsonValidationTest extends TestCase
 {
 
-    private $orderCreationUrl = "/api/orders";
+    private string $orderCreationUrl = "/api/orders";
 
     public function testReturn422IfProductsIsNotAnArray()
     {

@@ -10,6 +10,8 @@ use function PHPUnit\Framework\assertTrue;
 
 class OrderCrudTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * @var string
      */
@@ -19,19 +21,47 @@ class OrderCrudTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $response = $this->post($this->orderCreationUrl, [
+        $response = $this->post($this->orderCreationUrl, $this->requestData());
+
+        $response->assertHeader("Content-Type", "application/json");
+    }
+
+    public function testCreatingOrdersReturns201Created()
+    {
+        $this->withoutExceptionHandling();
+
+        $response = $this->post($this->orderCreationUrl, $this->requestData());
+
+        $response->assertCreated();
+    }
+
+    public function testCreatingOrdersReturnsMessageCreated()
+    {
+        $this->withoutExceptionHandling();
+
+        $response = $this->post($this->orderCreationUrl, $this->requestData());
+
+        $response->assertJson(["message" => "Order Created"]);
+    }
+
+    public function testCreatedOrderAppearsAsCountInDatabase()
+    {
+        $response = $this->postJson($this->orderCreationUrl, $this->requestData());
+
+        $this->assertDatabaseCount("orders", 1);
+    }
+
+    private function requestData()
+    {
+        return [
             "products" => [
                 [
                     "product_id" => 1,
                     "quantity" => 3
                 ]
             ]
-        ]);
-
-        $response->assertJson(["message" => "Order Created"]);
-        $response->assertHeader("Content-Type", "application/json");
+        ];
     }
-
 
     protected function setUp(): void
     {

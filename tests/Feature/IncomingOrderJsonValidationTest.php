@@ -2,12 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class IncomingOrderJsonValidationTest extends TestCase
 {
+    use RefreshDatabase;
 
     private string $orderCreationUrl = "/api/orders";
 
@@ -17,7 +19,7 @@ class IncomingOrderJsonValidationTest extends TestCase
         $response->assertUnprocessable();
     }
 
-    public function testReturn422IfBodyHasMalformedMainProductsKeyName()
+    public function testThrowUnprocessableContentIfBodyHasMalformedMainProductsKeyName()
     {
         $response = $this->postJson($this->orderCreationUrl, [
             "orders" => [
@@ -30,7 +32,7 @@ class IncomingOrderJsonValidationTest extends TestCase
         $response->assertUnprocessable();
     }
 
-    public function testReturn422IfProductsArrayHasMalformedProductIdKeyName()
+    public function testThrowUnprocessableContentIfProductsArrayHasMalformedProductIdKeyName()
     {
         $response = $this->postJson($this->orderCreationUrl, [
             "products" => [
@@ -43,12 +45,12 @@ class IncomingOrderJsonValidationTest extends TestCase
                 ]
             ]
         ]);
+
         $response->assertUnprocessable();
     }
 
-    public function testReturn422IfProductHasIfProductsArrayHasMalformedQuantityKeyName()
+    public function testThrowUnprocessableContentIfProductHasIfProductsArrayHasMalformedQuantityKeyName()
     {
-
         $response = $this->postJson($this->orderCreationUrl, [
             "products" => [
                 [
@@ -57,6 +59,32 @@ class IncomingOrderJsonValidationTest extends TestCase
                 ], [
                     "product_id" => 2,
                     "number" => 34
+                ]
+            ]
+        ]);
+        $response->assertUnprocessable();
+    }
+
+    public function testThrowUnprocessableContentIfProductHasIfQuantityLessThan1()
+    {
+        $response = $this->postJson($this->orderCreationUrl, [
+            "products" => [
+                [
+                    "product_id" => 1,
+                    "quantity" => -1
+                ]
+            ]
+        ]);
+        $response->assertUnprocessable();
+    }
+
+    public function testThrowUnprocessableContentIfProductHasIfProductDoesNotExist()
+    {
+        $response = $this->postJson($this->orderCreationUrl, [
+            "products" => [
+                [
+                    "product_id" => 1,
+                    "quantity" => 2
                 ]
             ]
         ]);

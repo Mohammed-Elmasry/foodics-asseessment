@@ -43,8 +43,12 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
+        $this->reportable(function (Throwable $e) {
+            //
+        });
+
         $this->renderable(function (Throwable $ex, Request $request) {
-            return response()->json(["message" => "Invalid Request Content"], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return response()->json(["message" => $ex->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         });
     }
 

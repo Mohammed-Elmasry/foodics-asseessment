@@ -11,18 +11,14 @@ class OrderController extends Controller
 
     public function store(OrderCreationRequest $request)
     {
-        try {
-            $order = Order::create();
+        $order = Order::create();
 
-            $products = $request->input("products");
+        $products = $request->input("products");
 
-            foreach ($products as $product) {
-                $order->products()->attach($product["product_id"], ["quantity" => $product["quantity"]]);
-            }
-
-        } catch (\RuntimeException $exception) {
-            abort(422);
+        foreach ($products as $product) {
+            $order->products()->attach($product["product_id"], ["quantity" => $product["quantity"]]);
         }
+
         return response()->json(["message" => "Order Created"], Response::HTTP_CREATED);
     }
 }

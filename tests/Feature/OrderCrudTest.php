@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Product;
 use Carbon\Traits\Date;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -53,10 +54,11 @@ class OrderCrudTest extends TestCase
 
     private function requestData()
     {
+        $product = Product::factory()->create();
         return [
             "products" => [
                 [
-                    "product_id" => 1,
+                    "product_id" => $product->id,
                     "quantity" => 3
                 ]
             ]

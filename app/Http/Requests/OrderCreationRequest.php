@@ -18,13 +18,8 @@ class OrderCreationRequest extends FormRequest
     {
         return [
             "products" => ["required", "array"],
-            "products.*.product_id" => ["required", "integer"],
-            "products.*.quantity" => ["required", "integer"]
+            "products.*.product_id" => ["required", "integer", "exists:products,id"],
+            "products.*.quantity" => ["required", "integer", "min:1"]
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpException(Response::HTTP_UNPROCESSABLE_ENTITY, "Invalid Request Content");
     }
 }

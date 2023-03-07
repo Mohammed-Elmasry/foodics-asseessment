@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Product;
 use Carbon\Traits\Date;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -17,11 +18,13 @@ class OrderCrudTest extends TestCase
      * @var string
      */
     private string $orderCreationUrl;
+    /**
+     * @var \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Factories\TModel|\Illuminate\Database\Eloquent\Model
+     */
+    private $product;
 
     public function testCreatingOrdersReturnsAJson()
     {
-        $this->withoutExceptionHandling();
-
         $response = $this->post($this->orderCreationUrl, $this->requestData());
 
         $response->assertHeader("Content-Type", "application/json");
@@ -29,8 +32,6 @@ class OrderCrudTest extends TestCase
 
     public function testCreatingOrdersReturns201Created()
     {
-        $this->withoutExceptionHandling();
-
         $response = $this->post($this->orderCreationUrl, $this->requestData());
 
         $response->assertCreated();
@@ -38,8 +39,6 @@ class OrderCrudTest extends TestCase
 
     public function testCreatingOrdersReturnsMessageCreated()
     {
-        $this->withoutExceptionHandling();
-
         $response = $this->post($this->orderCreationUrl, $this->requestData());
 
         $response->assertJson(["message" => "Order Created"]);
@@ -54,11 +53,10 @@ class OrderCrudTest extends TestCase
 
     private function requestData()
     {
-        $product = Product::factory()->create();
         return [
             "products" => [
                 [
-                    "product_id" => $product->id,
+                    "product_id" => $this->product->id,
                     "quantity" => 3
                 ]
             ]
@@ -69,5 +67,7 @@ class OrderCrudTest extends TestCase
     {
         parent::setUp();
         $this->orderCreationUrl = "/api/orders";
+        $this->product = Product::factory()->create(["product_name" => "Burger"]);
+
     }
 }

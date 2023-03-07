@@ -3,12 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
-use Carbon\Traits\Date;
-use Database\Seeders\DatabaseSeeder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use function PHPUnit\Framework\assertTrue;
 
 class OrderCrudTest extends TestCase
 {
@@ -19,7 +18,7 @@ class OrderCrudTest extends TestCase
      */
     private string $orderCreationUrl;
     /**
-     * @var \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Factories\TModel|\Illuminate\Database\Eloquent\Model
+     * @var Collection|\Illuminate\Database\Eloquent\Factories\Model|Model
      */
     private $product;
 

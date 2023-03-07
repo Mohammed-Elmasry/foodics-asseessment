@@ -44,9 +44,9 @@ class OrderCrudTest extends TestCase
         $response->assertJson(["message" => "Order Created"]);
     }
 
-    public function testCreatedOrderAppearsAsCountInDatabase()
+    public function testCreatedOrderAddsRecordsToDatabase()
     {
-        $response = $this->postJson($this->orderCreationUrl, $this->requestData());
+        $this->postJson($this->orderCreationUrl, $this->requestData());
 
         $this->assertDatabaseCount("orders", 1);
     }

@@ -28,7 +28,7 @@ class ProductsSeeder extends Seeder
             $onion->id => ["used_amount" => 20]
         ]);
 
-        $product = Product::create([
+        $product = Product::firstOrCreate([
             "product_name" => "Pizza"
         ]);
 

@@ -17,17 +17,21 @@ class IngredientsSeeder extends Seeder
     {
         Ingredient::firstOrCreate([
             "name" => "beef",
-            "available_amount_in_grams" => 20 * self::kilo
+            "available_amount_in_grams" => 20 * self::kilo,
+            "original_total_amount" => 20 * self::kilo,
+
         ]);
 
         Ingredient::firstOrCreate([
             "name" => "Cheese",
-            "available_amount_in_grams" => 5 * self::kilo
+            "available_amount_in_grams" => 5 * self::kilo,
+            "original_total_amount" => 5 * self::kilo
         ]);
 
         Ingredient::firstOrCreate([
             "name" => "Onion",
-            "available_amount_in_grams" => 1 * self::kilo
+            "available_amount_in_grams" => 1 * self::kilo,
+            "original_total_amount" => 1 * self::kilo
         ]);
     }
 }

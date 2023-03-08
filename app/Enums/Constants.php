@@ -4,7 +4,7 @@
 namespace App\Enums;
 
 
-class Constants
+Enum Constants
 {
     const KILO = 1000;
 }

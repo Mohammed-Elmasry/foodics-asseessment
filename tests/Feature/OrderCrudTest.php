@@ -24,28 +24,22 @@ class OrderCrudTest extends TestCase
 
     public function testCreatingOrdersReturnsAJson()
     {
-        $response = $this->post($this->orderCreationUrl, $this->requestData());
+        $response = $this->sendRequest();
 
         $response->assertHeader("Content-Type", "application/json");
     }
 
     public function testCreatingOrdersReturns201Created()
     {
-        $response = $this->post($this->orderCreationUrl, $this->requestData());
+        $response = $this->sendRequest();
 
         $response->assertCreated();
-    }
-
-    public function testCreatingOrdersReturnsMessageCreated()
-    {
-        $response = $this->post($this->orderCreationUrl, $this->requestData());
-
         $response->assertJson(["message" => "Order Created"]);
     }
 
     public function testCreatedOrderAddsRecordsToDatabase()
     {
-        $this->postJson($this->orderCreationUrl, $this->requestData());
+        $this->sendRequest();
 
         $this->assertDatabaseCount("orders", 1);
     }
@@ -60,6 +54,14 @@ class OrderCrudTest extends TestCase
                 ]
             ]
         ];
+    }
+
+    /**
+     * @return \Illuminate\Testing\TestResponse
+     */
+    public function sendRequest(): \Illuminate\Testing\TestResponse
+    {
+        return $this->post($this->orderCreationUrl, $this->requestData());
     }
 
     protected function setUp(): void

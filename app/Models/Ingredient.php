@@ -37,4 +37,10 @@ class Ingredient extends Model
     {
         return $this->available_amount_in_grams < $this->notificationThreshold();
     }
+
+    public function updateStockNotificationSent(bool $flag)
+    {
+        $this->stock_notification_sent = $flag;
+        $this->save();
+    }
 }

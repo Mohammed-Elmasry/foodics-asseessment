@@ -21,10 +21,9 @@ class IngredientsService
                 $ingredient->available_amount_in_grams -= ($ingredient->pivot->used_amount * $quantity);
                 $ingredient->save();
 
-                if ($ingredient->available_amount_in_grams < $ingredient->notificationThreshold()) {
-                    Mail::mailer("smtp")
-                        ->to("merchant@product.com")
-                        ->send(new StockDepletionEmail($ingredient));
+                if ($ingredient->available_amount_in_grams < $ingredient->notificationThreshold() && !$ingredient->stock_notification_sent) {
+                    Mail::send(new StockDepletionEmail($ingredient));
+                    $ingredient->updateStockNotificationSent(true);
                 }
             }
         });

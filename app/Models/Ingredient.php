@@ -17,6 +17,6 @@ class Ingredient extends Model
 
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class)->withPivot('amount')->withTimestamps();
+        return $this->belongsToMany(Product::class)->withPivot('used_amount')->withTimestamps();
     }
 }

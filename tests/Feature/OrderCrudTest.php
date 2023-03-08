@@ -20,7 +20,8 @@ class OrderCrudTest extends TestCase
 
     private string $orderCreationUrl;
 
-    private Product $product;
+    private Product $burger;
+    private Product $pizza;
 
     public function testCreatingOrdersReturnsAJson()
     {
@@ -50,7 +51,7 @@ class OrderCrudTest extends TestCase
         $this->post($this->orderCreationUrl, $this->requestData([
             "products" => [
                 [
-                    "product_id" => $this->product->id,
+                    "product_id" => $this->burger->id,
                     "quantity" => $quantity
                 ]
             ]
@@ -65,12 +66,37 @@ class OrderCrudTest extends TestCase
         $this->assertEquals($onion->available_amount_in_grams, (1 * self::KILO - (20 * $quantity)));
     }
 
+    public function testMakingOrderWithMultipleProductsDeductsIngredientsAmountsForEachProductPerQuantity()
+    {
+        $quantity1 = rand(1, 10);
+        $quantity2 = rand(1, 10);
+        $this->post($this->orderCreationUrl, $this->requestData([
+            "products" => [
+                [
+                    "product_id" => $this->burger->id,
+                    "quantity" => $quantity1
+                ], [
+                    "product_id" => $this->pizza->id,
+                    "quantity" => $quantity2
+                ]
+            ]
+        ]));
+
+        $beef = Ingredient::where(["name" => "beef"])->first();
+        $cheese = Ingredient::where(["name" => "cheese"])->first();
+        $onion = Ingredient::where(["name" => "onion"])->first();
+
+        $this->assertEquals($beef->available_amount_in_grams, 20000 - ((150 * $quantity1) + (500 * $quantity2)));
+        $this->assertEquals($cheese->available_amount_in_grams, 5000 - ((30 * $quantity1) + (400 * $quantity2)));
+        $this->assertEquals($onion->available_amount_in_grams, 1000 - ((20 * $quantity1) + (300 * $quantity2)));
+    }
+
     private function requestData(?array $data = [])
     {
         $default = [
             "products" => [
                 [
-                    "product_id" => $this->product->id,
+                    "product_id" => $this->burger->id,
                     "quantity" => 3
                 ]
             ]
@@ -81,9 +107,10 @@ class OrderCrudTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->seed();
         $this->orderCreationUrl = "/api/orders";
-        $this->product = Product::where(["product_name" => "Burger"])->first();
-
+        $this->burger = Product::where(["product_name" => "Burger"])->first();
+        $this->pizza = Product::where(["product_name" => "Pizza"])->first();
     }
 }

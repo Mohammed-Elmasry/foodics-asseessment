@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Events\IngredientUpdatedEvent;
 use App\Mail\StockDepletionEmail;
 use App\Models\Ingredient;
 use App\Models\Product;
@@ -18,14 +19,20 @@ class IngredientsService
     {
         DB::transaction(function () use ($product, $quantity) {
             foreach ($product->ingredients as $ingredient) {
-                $ingredient->available_amount_in_grams -= ($ingredient->pivot->used_amount * $quantity);
-                $ingredient->save();
+                $this->updateIngredientAvailableAmount($ingredient, $quantity);
 
-                if ($ingredient->available_amount_in_grams < $ingredient->notificationThreshold() && !$ingredient->stock_notification_sent) {
-                    Mail::send(new StockDepletionEmail($ingredient));
-                    $ingredient->updateStockNotificationSent(true);
-                }
+                event(new IngredientUpdatedEvent($ingredient));
             }
         });
+    }
+
+    /**
+     * @param $ingredient
+     * @param int $quantity
+     */
+    public function updateIngredientAvailableAmount($ingredient, int $quantity): void
+    {
+        $ingredient->available_amount_in_grams -= ($ingredient->pivot->used_amount * $quantity);
+        $ingredient->save();
     }
 }

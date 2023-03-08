@@ -17,7 +17,40 @@ class StockDepletionNotificationTest extends TestCase
     private string $orderCreationUrl;
     private Product $burger;
 
+    public function testNoEmailIsSentWhileIngredientsAmountsAreAboveThreshold()
+    {
+        Mail::fake();
 
+        $this->postJson($this->orderCreationUrl, $this->requestData());
+
+        Mail::assertNothingSent();
+    }
+
+    public function testDepletionNotificationEmailIsSentWhenIngredientsAvailableAmountIsBelowThreshold()
+    {
+        Mail::fake();
+
+        Ingredient::all()->each(function ($ingredient) {
+            $ingredient->available_amount_in_grams = $ingredient->notificationThreshold();
+            $ingredient->save();
+        });
+
+        $this->postJson($this->orderCreationUrl, $this->requestData());
+
+        Mail::assertSent(StockDepletionEmail::class);
+    }
+
+    public function testDepletionEmailIsSentOnlyOnceForAGivenIngredient()
+    {
+        Mail::shouldReceive('send')->once();
+
+        $beef = Ingredient::where(["name" => "beef"])->first();
+        $beef->available_amount_in_grams = 0;
+        $beef->save();
+
+        $this->postJson($this->orderCreationUrl, $this->requestData());
+        $this->postJson($this->orderCreationUrl, $this->requestData());
+    }
 
     private function requestData(?array $data = [])
     {

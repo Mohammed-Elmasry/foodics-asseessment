@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Constants;
+use App\Services\IngredientsService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Ingredient extends Model
 {
     use HasFactory;
+
 
     protected $fillable = [
         "name",
@@ -24,5 +26,15 @@ class Ingredient extends Model
     public function availableAmountInKilos()
     {
         return $this->available_amount_in_grams / Constants::KILO;
+    }
+
+    public function notificationThreshold(): int
+    {
+        return (int)$this->original_total_amount * IngredientsService::NOTIFICATION_THRESHOLD_RATIO;
+    }
+
+    public function reachedNotificationThreshold(): bool
+    {
+        return $this->available_amount_in_grams < $this->notificationThreshold();
     }
 }

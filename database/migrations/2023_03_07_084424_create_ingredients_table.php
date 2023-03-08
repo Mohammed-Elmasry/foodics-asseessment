@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->integer("available_amount_in_grams");
+            $table->integer("original_total_amount");
             $table->timestamps();
         });
     }

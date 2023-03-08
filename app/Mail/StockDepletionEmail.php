@@ -36,6 +36,7 @@ class StockDepletionEmail extends Mailable
     {
         return new Envelope(
             subject: 'Stock Depletion Warning',
+            to: 'merchant@example.com'
         );
     }
 

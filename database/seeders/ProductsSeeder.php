@@ -28,8 +28,14 @@ class ProductsSeeder extends Seeder
             $onion->id => ["used_amount" => 20]
         ]);
 
-//        $product->ingredients()->attach($beef->id, ["used_amount" => 150]);
-//        $product->ingredients()->attach($cheese->id, ["used_amount" => 30]);
-//        $product->ingredients()->attach($onion->id, ["used_amount" => 20]);
+        $product = Product::create([
+            "product_name" => "Pizza"
+        ]);
+
+        $product->ingredients()->sync([
+            $beef->id => ["used_amount" => 500],
+            $cheese->id => ["used_amount" => 400],
+            $onion->id => ["used_amount" => 300]
+        ]);
     }
 }

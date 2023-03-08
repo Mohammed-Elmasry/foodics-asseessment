@@ -5,11 +5,8 @@ namespace App\Services;
 
 
 use App\Events\IngredientUpdatedEvent;
-use App\Mail\StockDepletionEmail;
-use App\Models\Ingredient;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 
 class IngredientsService
 {

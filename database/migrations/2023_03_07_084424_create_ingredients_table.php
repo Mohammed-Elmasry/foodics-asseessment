@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("name");
             $table->integer("available_amount_in_grams");
             $table->integer("original_total_amount");
+            $table->boolean('stock_notification_sent')->default(false);
             $table->timestamps();
         });
     }

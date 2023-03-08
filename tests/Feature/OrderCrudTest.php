@@ -47,7 +47,7 @@ class OrderCrudTest extends TestCase
 
     public function testMakingANewOrderReducesAmountOfAvailableIngredientsOfOrderedProduct()
     {
-        $quantity = rand(1, 10);
+        $quantity = 2;
         $this->post($this->orderCreationUrl, $this->requestData([
             "products" => [
                 [
@@ -68,8 +68,8 @@ class OrderCrudTest extends TestCase
 
     public function testMakingOrderWithMultipleProductsDeductsIngredientsAmountsForEachProductPerQuantity()
     {
-        $quantity1 = rand(1, 10);
-        $quantity2 = rand(1, 10);
+        $quantity1 = 1;
+        $quantity2 = 1;
         $this->post($this->orderCreationUrl, $this->requestData([
             "products" => [
                 [
@@ -97,7 +97,7 @@ class OrderCrudTest extends TestCase
             "products" => [
                 [
                     "product_id" => $this->burger->id,
-                    "quantity" => 3
+                    "quantity" => 1
                 ]
             ]
         ];

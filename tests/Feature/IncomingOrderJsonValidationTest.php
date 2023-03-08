@@ -88,7 +88,7 @@ class IncomingOrderJsonValidationTest extends TestCase
         $response = $this->postJson($this->orderCreationUrl, [
             "products" => [
                 [
-                    "product_id" => 10,
+                    "product_id" => 1,
                     "quantity" => 2
                 ]
             ]

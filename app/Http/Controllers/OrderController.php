@@ -14,11 +14,9 @@ class OrderController extends Controller
 
     public function store(OrderCreationRequest $request, IngredientsService $ingredientsService, OrdersService $ordersService)
     {
-        $order = Order::create();
-
         $products = $request->input("products");
 
-        $ordersService->makeOrder($order, $products);
+        $ordersService->makeOrder($products);
 
         foreach ($products as $product) {
             $ingredientsService->updateIngredientsAmounts(Product::find($product["product_id"]), $product["quantity"]);

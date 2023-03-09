@@ -18,7 +18,7 @@ return new class extends Migration {
 
             $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('ingredient_id')->references('id')->on('ingredients');
-            
+
             $table->timestamps();
         });
     }

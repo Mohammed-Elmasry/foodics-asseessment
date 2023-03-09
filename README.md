@@ -57,7 +57,11 @@ The email service __mailpit__ comes preinstalled with *__Laravel Sail__*. It is 
 to uses port 1025 and could be accessed with the browser on `localhost:8025`. This will be used for end-to-end testing 
 and evaluation.
 
+The following diagrams demonstrate the __ERD__ and overview of the __class diagram__, respectively:
 
+![ERD of the system](.diagrams/ERD%20with%20colored%20entities%20(UML%20notation).png)
+
+![class diagram of the system](.diagrams/Class%20Diagram.png)
 ### Testing the Application
 
 The system is a __RESTful__ API. It projects an endpoint at `localhost/api/orders` with a __POST__ HTTP method. It is

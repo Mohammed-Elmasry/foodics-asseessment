@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Events\IngredientUpdatedEvent;
 use App\Models\Product;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 

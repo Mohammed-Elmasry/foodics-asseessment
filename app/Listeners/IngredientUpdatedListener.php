@@ -24,7 +24,7 @@ class IngredientUpdatedListener
     public function handle(IngredientUpdatedEvent $event): void
     {
         $ingredient = $event->ingredient;
-        if ($ingredient->available_amount_in_grams < $ingredient->notificationThreshold() && !$ingredient->stock_notification_sent) {
+        if ($ingredient->reachedThreshold() && $ingredient->stockDepletionNotificationSent()) {
             Mail::send(new StockDepletionEmail($ingredient));
             $ingredient->updateStockNotificationSent(true);
         }

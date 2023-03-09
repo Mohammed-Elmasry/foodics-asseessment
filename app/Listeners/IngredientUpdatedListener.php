@@ -11,14 +11,6 @@ use Illuminate\Support\Facades\Mail;
 class IngredientUpdatedListener
 {
     /**
-     * Create the event listener.
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Handle the event.
      */
     public function handle(IngredientUpdatedEvent $event): void

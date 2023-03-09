@@ -53,6 +53,4 @@ class Ingredient extends Model
     {
         return !$this->stock_notification_sent;
     }
-
-
 }

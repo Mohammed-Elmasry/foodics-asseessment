@@ -11,12 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 class OrderController extends Controller
 {
 
-    public function store(OrderCreationRequest $request)
+    public function store(OrderCreationRequest $request, IngredientsService $service)
     {
         $order = Order::create();
 
         $products = $request->input("products");
-        $service = new IngredientsService();
 
         foreach ($products as $product) {
             $order->products()->attach($product["product_id"], ["quantity" => $product["quantity"]]);

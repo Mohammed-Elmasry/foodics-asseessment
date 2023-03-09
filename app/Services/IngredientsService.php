@@ -6,7 +6,9 @@ namespace App\Services;
 
 use App\Events\IngredientUpdatedEvent;
 use App\Models\Product;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 
 class IngredientsService
 {
@@ -16,7 +18,7 @@ class IngredientsService
     {
         DB::transaction(function () use ($product, $quantity) {
             foreach ($product->ingredients as $ingredient) {
-                $this->updateIngredientAvailableAmount($ingredient, $quantity);
+                $this->updateIngredientAvailableAmount($product->product_name, $ingredient, $quantity);
 
                 event(new IngredientUpdatedEvent($ingredient));
             }
@@ -24,12 +26,17 @@ class IngredientsService
     }
 
     /**
+     * @param string $productName
      * @param $ingredient
      * @param int $quantity
      */
-    public function updateIngredientAvailableAmount($ingredient, int $quantity): void
+    public function updateIngredientAvailableAmount(string $productName, $ingredient, int $quantity): void
     {
-        $ingredient->available_amount_in_grams -= ($ingredient->pivot->used_amount * $quantity);
+        if (!Redis::exists($productName . ":" . $ingredient->name))
+            Redis::set($productName . ":" . $ingredient->name, $ingredient->pivot->used_amount);
+
+        $ingredient->available_amount_in_grams -= (Redis::get($productName . ":" . $ingredient->name) * $quantity);
         $ingredient->save();
     }
+
 }
